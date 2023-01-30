@@ -10,11 +10,11 @@ import { Todo } from '../../models/todo';
 export class MongoCreateTodoRepository implements ICreateTodoRepository {
   async createTodo(params: CreateTodoParams): Promise<Todo> {
     const { insertedId } = await MongoClient.db
-      .collection('todo')
+      .collection('todos')
       .insertOne(params);
 
     const todo = await MongoClient.db
-      .collection<Omit<Todo, 'id'>>('todo')
+      .collection<Omit<Todo, 'id'>>('todos')
       .findOne({ _id: insertedId });
 
     if (!todo) {
