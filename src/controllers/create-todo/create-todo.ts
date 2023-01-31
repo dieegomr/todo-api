@@ -1,4 +1,5 @@
 import { Todo } from '../../models/todo';
+import { badRequest, created, serverError } from '../helpers';
 import { HttpRequest, HttpResponse, IController } from '../protocols';
 import { CreateTodoParams, ICreateTodoRepository } from './protocols';
 
@@ -7,31 +8,25 @@ export class CreateTodoController implements IController {
 
   async handle(
     httpRequest: HttpRequest<CreateTodoParams>
-  ): Promise<HttpResponse<Todo>> {
+  ): Promise<HttpResponse<Todo | string>> {
     try {
       if (!httpRequest.body) {
-        return {
-          statusCode: 400,
-          body: 'Por favor preencha o body da requisição',
-        };
+        return badRequest('Por favor preencha o body da requisição');
       }
 
       const requiredFields = ['content'];
 
       for (const field of requiredFields) {
         if (!httpRequest.body[field as keyof CreateTodoParams].length) {
-          return {
-            statusCode: 400,
-            body: `Preencha o campo ${field}`,
-          };
+          badRequest(`Preencha o campo ${field}`);
         }
       }
 
       const todo = await this.createTodoRepository.createTodo(httpRequest.body);
 
-      return { statusCode: 201, body: todo };
+      return created<Todo>(todo);
     } catch (error) {
-      return { statusCode: 500, body: 'Algo deu errado' };
+      return serverError();
     }
   }
 }

@@ -1,21 +1,17 @@
-import { IController } from '../protocols';
+import { Todo } from '../../models/todo';
+import { ok, serverError } from '../helpers';
+import { HttpResponse, IController } from '../protocols';
 import { IGetTodosRepository } from './protocols';
 
 export class GetTodosController implements IController {
   constructor(private readonly getTodosRepository: IGetTodosRepository) {}
-  async handle() {
+  async handle(): Promise<HttpResponse<Todo[] | string>> {
     try {
       const todos = await this.getTodosRepository.getTodos();
 
-      return {
-        statusCode: 200,
-        body: todos,
-      };
+      return ok<Todo[]>(todos);
     } catch (error) {
-      return {
-        statusCode: 500,
-        body: 'Something went wrong',
-      };
+      return serverError();
     }
   }
 }

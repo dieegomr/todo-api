@@ -1,4 +1,5 @@
 import { Todo } from '../../models/todo';
+import { badRequest, ok, serverError } from '../helpers';
 import { HttpRequest, HttpResponse, IController } from '../protocols';
 import { IUpdateTodoRepository, UpdateTodoParams } from './protocols';
 
@@ -7,23 +8,17 @@ export class UpdateTodoController implements IController {
 
   async handle(
     httpRequest: HttpRequest<UpdateTodoParams>
-  ): Promise<HttpResponse<Todo>> {
+  ): Promise<HttpResponse<Todo | string>> {
     try {
       const id = httpRequest.params.id;
       const body = httpRequest.body;
 
       if (!body) {
-        return {
-          statusCode: 400,
-          body: 'Faltando algum campo',
-        };
+        return badRequest('Faltando algum campo');
       }
 
       if (!id) {
-        return {
-          statusCode: 400,
-          body: 'É necessário passar um id como parametro',
-        };
+        return badRequest('É necessário passar um id como parametro');
       }
 
       const allowedFieldsToUpdate: (keyof UpdateTodoParams)[] = ['content'];
@@ -33,20 +28,16 @@ export class UpdateTodoController implements IController {
       );
 
       if (someFieldIsNotAllowedToUpdate) {
-        return {
-          statusCode: 400,
-          body: 'Algum campo recebido como parametro, não é permitido',
-        };
+        return badRequest(
+          'Algum campo recebido como parametro, não é permitido'
+        );
       }
 
       const todo = await this.updateTodoRepository.updateTodo(id, body);
 
-      return {
-        statusCode: 200,
-        body: todo,
-      };
+      return ok<Todo>(todo);
     } catch (error) {
-      return { statusCode: 500, body: 'Algo deu errado' };
+      return serverError();
     }
   }
 }
