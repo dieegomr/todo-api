@@ -3,7 +3,7 @@ import { IDeleteTodoRepository } from '../../controllers/delete-todo/protocols';
 import { MongoClient } from '../../database/mongo';
 import { Todo } from '../../models/todo';
 
-export class MongodeleteTodoRepository implements IDeleteTodoRepository {
+export class MongoDeleteTodoRepository implements IDeleteTodoRepository {
   async deleteTodo(id: string): Promise<Todo> {
     const todo = await MongoClient.db
       .collection<Omit<Todo, 'id'>>('todos')

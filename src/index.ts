@@ -7,6 +7,8 @@ import { MongoCreateTodoRepository } from './repositories/create-todo/mongo-crea
 import { CreateTodoController } from './controllers/create-todo/create-todo';
 import { MongoUpdateTodoRepository } from './repositories/update-todo/mongo-update-todo';
 import { UpdateTodoController } from './controllers/update-todo/update-todo';
+import { MongoDeleteTodoRepository } from './repositories/delete-todo/mongo-delete-todo';
+import { DeleteTodoController } from './controllers/delete-todo/delete-todo';
 
 const main = async () => {
   config();
@@ -50,6 +52,20 @@ const main = async () => {
 
     const { body, statusCode } = await updateTodoController.handle({
       body: req.body,
+      params: req.params,
+    });
+
+    res.status(statusCode).send(body);
+  });
+
+  app.delete('/todos/:id', async (req, res) => {
+    const mongoDeleteTodoRepository = new MongoDeleteTodoRepository();
+
+    const deleteTodoController = new DeleteTodoController(
+      mongoDeleteTodoRepository
+    );
+
+    const { body, statusCode } = await deleteTodoController.handle({
       params: req.params,
     });
 
