@@ -9,6 +9,7 @@ import { MongoUpdateTodoRepository } from './repositories/update-todo/mongo-upda
 import { UpdateTodoController } from './controllers/update-todo/update-todo';
 import { MongoDeleteTodoRepository } from './repositories/delete-todo/mongo-delete-todo';
 import { DeleteTodoController } from './controllers/delete-todo/delete-todo';
+import { badRequest } from './controllers/helpers';
 
 const main = async () => {
   config();
@@ -68,6 +69,14 @@ const main = async () => {
     const { body, statusCode } = await deleteTodoController.handle({
       params: req.params,
     });
+
+    res.status(statusCode).send(body);
+  });
+
+  app.all('*', async (req, res) => {
+    const { body, statusCode } = badRequest(
+      `Não foi possível encontrar ${req.originalUrl} neste servidor`
+    );
 
     res.status(statusCode).send(body);
   });

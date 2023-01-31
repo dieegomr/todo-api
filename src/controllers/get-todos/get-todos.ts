@@ -9,8 +9,10 @@ export class GetTodosController implements IController {
     try {
       const todos = await this.getTodosRepository.getTodos();
 
+      console.log(todos);
       return ok<Todo[]>(todos);
     } catch (error) {
+      console.log(error);
       return serverError();
     }
   }
