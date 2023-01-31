@@ -5,6 +5,8 @@ import { MongoGetTodosRepository } from './repositories/get-todos/mongo-get-todo
 import { MongoClient } from './database/mongo';
 import { MongoCreateTodoRepository } from './repositories/create-todo/mongo-create-todo';
 import { CreateTodoController } from './controllers/create-todo/create-todo';
+import { MongoUpdateTodoRepository } from './repositories/update-todo/mongo-update-todo';
+import { UpdateTodoController } from './controllers/update-todo/update-todo';
 
 const main = async () => {
   config();
@@ -34,6 +36,21 @@ const main = async () => {
 
     const { body, statusCode } = await createTodoController.handle({
       body: req.body,
+    });
+
+    res.status(statusCode).send(body);
+  });
+
+  app.patch('/todos/:id', async (req, res) => {
+    const mongoUpdateTodoRepository = new MongoUpdateTodoRepository();
+
+    const updateTodoController = new UpdateTodoController(
+      mongoUpdateTodoRepository
+    );
+
+    const { body, statusCode } = await updateTodoController.handle({
+      body: req.body,
+      params: req.params,
     });
 
     res.status(statusCode).send(body);
