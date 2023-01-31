@@ -1,18 +1,23 @@
 import { Todo } from '../../models/todo';
-import { HttpRequest, HttpResponse } from '../protocols';
-import {
-  IUpdateTodoController,
-  IUpdateTodoRepository,
-  UpdateTodoParams,
-} from './protocols';
+import { HttpRequest, HttpResponse, IController } from '../protocols';
+import { IUpdateTodoRepository, UpdateTodoParams } from './protocols';
 
-export class UpdateTodoController implements IUpdateTodoController {
+export class UpdateTodoController implements IController {
   constructor(private readonly updateTodoRepository: IUpdateTodoRepository) {}
 
-  async handle(httpRequest: HttpRequest<any>): Promise<HttpResponse<Todo>> {
+  async handle(
+    httpRequest: HttpRequest<UpdateTodoParams>
+  ): Promise<HttpResponse<Todo>> {
     try {
       const id = httpRequest.params.id;
       const body = httpRequest.body;
+
+      if (!body) {
+        return {
+          statusCode: 400,
+          body: 'Faltando algum campo',
+        };
+      }
 
       if (!id) {
         return {

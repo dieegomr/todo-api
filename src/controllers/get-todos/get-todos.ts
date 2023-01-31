@@ -1,6 +1,7 @@
-import { IGetTodosController, IGetTodosRepository } from './protocols';
+import { IController } from '../protocols';
+import { IGetTodosRepository } from './protocols';
 
-export class GetTodosController implements IGetTodosController {
+export class GetTodosController implements IController {
   constructor(private readonly getTodosRepository: IGetTodosRepository) {}
   async handle() {
     try {

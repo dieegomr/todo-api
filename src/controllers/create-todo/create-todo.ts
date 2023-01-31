@@ -1,12 +1,8 @@
 import { Todo } from '../../models/todo';
-import { HttpRequest, HttpResponse } from '../protocols';
-import {
-  CreateTodoParams,
-  ICreateTodoController,
-  ICreateTodoRepository,
-} from './protocols';
+import { HttpRequest, HttpResponse, IController } from '../protocols';
+import { CreateTodoParams, ICreateTodoRepository } from './protocols';
 
-export class CreateTodoController implements ICreateTodoController {
+export class CreateTodoController implements IController {
   constructor(private readonly createTodoRepository: ICreateTodoRepository) {}
 
   async handle(

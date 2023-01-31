@@ -1,8 +1,8 @@
 import { Todo } from '../../models/todo';
-import { HttpRequest, HttpResponse } from '../protocols';
-import { IDeleteTodoController, IDeleteTodoRepository } from './protocols';
+import { HttpRequest, HttpResponse, IController } from '../protocols';
+import { IDeleteTodoRepository } from './protocols';
 
-export class DeleteTodoController implements IDeleteTodoController {
+export class DeleteTodoController implements IController {
   constructor(private readonly deleteTodoRepository: IDeleteTodoRepository) {}
 
   async handle(httpRequest: HttpRequest<any>): Promise<HttpResponse<Todo>> {
