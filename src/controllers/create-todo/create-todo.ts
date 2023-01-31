@@ -26,7 +26,6 @@ export class CreateTodoController implements IController {
 
       return created<Todo>(todo);
     } catch (error) {
-      console.log(error);
       return serverError();
     }
   }
