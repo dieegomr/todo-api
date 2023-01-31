@@ -1,11 +1,12 @@
 import { IGetTodosRepository } from '../../controllers/get-todos/protocols';
 import { MongoClient } from '../../database/mongo';
 import { Todo } from '../../models/todo';
+import { MongoUser } from '../mongo-protocols';
 
 export class MongoGetTodosRepository implements IGetTodosRepository {
   async getTodos(): Promise<Todo[]> {
     const todos = await MongoClient.db
-      .collection<Omit<Todo, 'id'>>('todos')
+      .collection<MongoUser>('todos')
       .find()
       .toArray();
 

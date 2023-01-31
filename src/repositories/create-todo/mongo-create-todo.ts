@@ -6,6 +6,7 @@ import {
 import { MongoClient } from '../../database/mongo';
 
 import { Todo } from '../../models/todo';
+import { MongoUser } from '../mongo-protocols';
 
 export class MongoCreateTodoRepository implements ICreateTodoRepository {
   async createTodo(params: CreateTodoParams): Promise<Todo> {
@@ -14,7 +15,7 @@ export class MongoCreateTodoRepository implements ICreateTodoRepository {
       .insertOne(params);
 
     const todo = await MongoClient.db
-      .collection<Omit<Todo, 'id'>>('todos')
+      .collection<MongoUser>('todos')
       .findOne({ _id: insertedId });
 
     if (!todo) {
