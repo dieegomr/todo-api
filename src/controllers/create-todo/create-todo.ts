@@ -10,19 +10,17 @@ export class CreateTodoController implements IController {
     httpRequest: HttpRequest<CreateTodoParams>
   ): Promise<HttpResponse<Todo | string>> {
     try {
-      if (!httpRequest.body) {
-        return badRequest('Por favor preencha o body da requisição');
-      }
-
-      const requiredFields = ['content'];
+      const requiredFields = ['content', 'isDone'];
 
       for (const field of requiredFields) {
-        if (!httpRequest.body[field as keyof CreateTodoParams].length) {
-          badRequest(`Preencha o campo ${field}`);
+        if (!httpRequest?.body?.[field as keyof CreateTodoParams]?.length) {
+          return badRequest(`Preencha o campo ${field}`);
         }
       }
 
-      const todo = await this.createTodoRepository.createTodo(httpRequest.body);
+      const todo = await this.createTodoRepository.createTodo(
+        httpRequest.body!
+      );
 
       return created<Todo>(todo);
     } catch (error) {
