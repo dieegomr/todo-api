@@ -10,13 +10,11 @@ export class CreateTodoController implements IController {
     httpRequest: HttpRequest<CreateTodoParams>
   ): Promise<HttpResponse<Todo | string>> {
     try {
-      const requiredFields = ['content', 'isDone'];
+      if (!httpRequest.body?.content || httpRequest.body?.content.length === 0)
+        return badRequest('Preencha o campo content');
 
-      for (const field of requiredFields) {
-        if (!httpRequest?.body?.[field as keyof CreateTodoParams]?.length) {
-          return badRequest(`Preencha o campo ${field}`);
-        }
-      }
+      if (typeof httpRequest.body.isDone !== 'boolean')
+        return badRequest('Preencha o campo isDone');
 
       const todo = await this.createTodoRepository.createTodo(
         httpRequest.body!
