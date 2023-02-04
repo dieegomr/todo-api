@@ -11,10 +11,15 @@ import { MongoDeleteTodoRepository } from './repositories/delete-todo/mongo-dele
 import { DeleteTodoController } from './controllers/delete-todo/delete-todo';
 import { badRequest } from './controllers/helpers';
 
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const cors = require('cors');
+
 const main = async () => {
   config();
 
   const app = express();
+
+  app.use(cors());
 
   app.use(express.json());
 
